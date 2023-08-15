@@ -1,0 +1,1 @@
+Les types sont dynamiques, faut faire gaffe. Pas comme en C++ où c'est strict.
