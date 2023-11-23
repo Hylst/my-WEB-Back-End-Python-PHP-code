@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Exercice 3 - Templates</title>
-</head>
-<body>
-    <h1>Bienvenue, {{ name }} !</h1>
-    <p>Ceci est une page générée dynamiquement par Flask.</p>
-    <p>
-        <!-- Petite note pour moi-même : Jinja2 est vraiment puissant. 
+{% extends "layout.html" %}
+
+{% block title %}Exercice 3 - Templates{% endblock %}
+
+{% block content %}
+<h1>Bienvenue, {{ name }} !</h1>
+<p>Ceci est une page générée dynamiquement par Flask.</p>
+<p>
+    <!-- Petite note pour moi-même : Jinja2 est vraiment puissant. 
              C'est un peu le sort de "Polymorph" du HTML. -->
-        Le code Python reste propre, et le HTML aussi.
-    </p>
-</body>
-</html>
+    Le code Python reste propre, et le HTML aussi.
+    Maintenant avec de l'héritage de template !
+</p>
+{% endblock %}

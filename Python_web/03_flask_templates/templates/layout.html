@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon App Flask{% endblock %}</title>
+</head>
+
+<body>
+    <header style="background: #eee; padding: 10px;">
+        <strong>Flask App</strong>
+    </header>
+
+    <main style="padding: 20px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="margin-top: 20px; font-size: small; color: grey;">
+        &copy; 2023 - Geoffroy's Quest
+    </footer>
+</body>
+
+</html>
