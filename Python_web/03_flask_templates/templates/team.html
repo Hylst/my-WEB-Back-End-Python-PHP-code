@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}L'Équipe{% endblock %}
+
+{% block content %}
+<h2>Les Membres de la Guilde</h2>
+<p>Voici les héros qui participent à cette aventure :</p>
+
+<ul>
+    {% for member in members %}
+    <li style="margin-bottom: 10px;">
+        <strong>{{ member.name }}</strong>
+        <span style="color: grey;">({{ member.role }})</span>
+        - Niveau {{ member.level }}
+        {% if member.level >= 10 %}
+        <span style="color: gold;">★ Légende</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

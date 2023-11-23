@@ -4,19 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Mon App Flask{% endblock %}</title>
+    <!-- Chargement du CSS statique -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <header style="background: #eee; padding: 10px;">
-        <strong>Flask App</strong>
+    <header>
+        <h1>Flask Adventure</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/about">À Propos</a></li>
+                <li><a href="/team">L'Équipe</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main style="padding: 20px;">
+    <main>
         {% block content %}{% endblock %}
     </main>
 
-    <footer style="margin-top: 20px; font-size: small; color: grey;">
-        &copy; 2023 - Geoffroy's Quest
+    <footer>
+        <p>&copy; 2023 - Geoffroy's Quest | Propulsé par Jinja2</p>
     </footer>
 </body>
 
