@@ -3,29 +3,42 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Exercice 4 - Formulaire</title>
+    <title>Exercice 4 - Contact Guilde</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <h1>Contactez la Guilde</h1>
+    <div class="container">
+        <h1>Bureau des Quêtes</h1>
 
-    {% if success %}
-    <p style="color: green; font-weight: bold;">Message bien reçu ! La chouette est en route.</p>
-    {% endif %}
+        <!-- Zone de messages Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
 
-    {% if error %}
-    <p style="color: red; font-weight: bold;">Erreur : {{ error }}</p>
-    {% endif %}
+        <form method="POST" action="/">
+            <div class="form-group">
+                <label for="nom">Nom du Héros</label>
+                <input type="text" id="nom" name="nom" placeholder="Ex: Gandalf le Gris">
+            </div>
 
-    <form method="POST" action="/">
-        <label for="nom">Nom du personnage :</label><br>
-        <input type="text" id="nom" name="nom"><br><br>
+            <div class="form-group">
+                <label for="message">Description de la Mission</label>
+                <textarea id="message" name="message" rows="5"
+                    placeholder="Décrivez votre problème de dragon..."></textarea>
+            </div>
 
-        <label for="message">Votre quête :</label><br>
-        <textarea id="message" name="message"></textarea><br><br>
-
-        <input type="submit" value="Envoyer le parchemin">
-    </form>
+            <button type="submit">Envoyer la Requête</button>
+        </form>
+    </div>
 </body>
 
 </html>
