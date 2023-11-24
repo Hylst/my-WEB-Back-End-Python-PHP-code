@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Exercice 4 - Formulaire</title>
+</head>
+
+<body>
+    <h1>Contactez la Guilde</h1>
+
+    {% if success %}
+    <p style="color: green;">Message bien reçu ! La chouette est en route.</p>
+    {% endif %}
+
+    <form method="POST" action="/">
+        <label for="nom">Nom du personnage :</label><br>
+        <input type="text" id="nom" name="nom" required><br><br>
+
+        <label for="message">Votre quête :</label><br>
+        <textarea id="message" name="message" required></textarea><br><br>
+
+        <input type="submit" value="Envoyer le parchemin">
+    </form>
+</body>
+
+</html>
