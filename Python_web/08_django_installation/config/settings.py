@@ -1,13 +1,20 @@
 from pathlib import Path
+import os
 
 # 28/11/2023 - Geoffroy
-# Le cockpit de l'avion. Y a des boutons partout.
-# Je laisse les defaults pour l'instant, pas envie de crasher au décollage.
+# Configuration Django V2
+# Ajout de variables d'environnement pour la sécurité.
+# Structure prête pour le déploiement (même si on en est loin).
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-mais-c-est-pour-apprendre'
-DEBUG = True
-ALLOWED_HOSTS = []
+
+# Sécurité : En prod, utiliser une variable d'environnement
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-insecure-key-change-me')
+
+# Debug : Désactiver en production !
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -16,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Ma première app. Faut pas oublier de l'enregistrer ici sinon elle n'existe pas pour Django.
+    # Apps locales
     'library',
 ]
 
@@ -35,7 +42,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Templates globaux
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -50,6 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Base de données SQLite (suffisant pour apprendre)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -57,4 +65,25 @@ DATABASES = {
     }
 }
 
+# Logging basique
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
+LANGUAGE_CODE = 'fr-fr'
+TIME_ZONE = 'Europe/Paris'
+USE_I18N = True
+USE_TZ = True
+
 STATIC_URL = 'static/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
