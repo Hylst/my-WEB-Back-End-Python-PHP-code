@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bibliothèque du Donjon</title>
+</head>
+
+<body>
+    <h1>Grimoires disponibles</h1>
+
+    {% if livres %}
+    <ul>
+        {% for livre in livres %}
+        <li>
+            <strong>{{ livre.titre }}</strong> - <em>{{ livre.auteur }}</em><br>
+            <small>Publié le : {{ livre.date_publication }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>La bibliothèque est vide... Les gobelins ont tout volé ?</p>
+    {% endif %}
+</body>
+
+</html>
