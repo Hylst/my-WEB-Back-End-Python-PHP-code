@@ -4,23 +4,181 @@
 <head>
     <meta charset="UTF-8">
     <title>Bibliothèque du Donjon</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #f5f5dc;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: #8b4513;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .search-form {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            background: #daa520;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .stats {
+            background: #fff8dc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-card h3 {
+            margin: 0 0 10px;
+            color: #8b4513;
+        }
+
+        .book-card .author {
+            color: #666;
+            font-style: italic;
+        }
+
+        .book-card .meta {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .badge-available {
+            background: #90ee90;
+        }
+
+        .badge-unavailable {
+            background: #ffcccb;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a {
+            padding: 5px 15px;
+            margin: 0 5px;
+            background: #daa520;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        a {
+            color: #8b4513;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Grimoires disponibles</h1>
+    <div class="container">
+        <header>
+            <h1>📚 Bibliothèque du Donjon</h1>
+            <form class="search-form" method="GET">
+                <input type="text" name="q" placeholder="Rechercher un titre ou auteur..." value="{{ search_query }}">
+                <button type="submit">🔍 Chercher</button>
+            </form>
+        </header>
 
-    {% if livres %}
-    <ul>
-        {% for livre in livres %}
-        <li>
-            <strong>{{ livre.titre }}</strong> - <em>{{ livre.auteur }}</em><br>
-            <small>Publié le : {{ livre.date_publication }}</small>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>La bibliothèque est vide... Les gobelins ont tout volé ?</p>
-    {% endif %}
+        <div class="stats">
+            <span>📖 {{ total_count }} grimoires</span>
+            <span>|</span>
+            <a href="{% url 'stats' %}">Voir les statistiques</a>
+        </div>
+
+        {% if livres %}
+        <div class="book-grid">
+            {% for livre in livres %}
+            <div class="book-card">
+                <h3><a href="{% url 'detail' livre.pk %}">{{ livre.titre }}</a></h3>
+                <p class="author">{{ livre.auteur }}</p>
+                <p>{{ livre.resume|truncatewords:20 }}</p>
+                <div class="meta">
+                    <span>{{ livre.etoiles }}</span>
+                    <span class="badge {% if livre.disponible %}badge-available{% else %}badge-unavailable{% endif %}">
+                        {% if livre.disponible %}Disponible{% else %}Emprunté{% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">«
+                Précédent</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Suivant
+                »</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <p>Aucun grimoire trouvé...</p>
+        {% endif %}
+    </div>
 </body>
 
 </html>
