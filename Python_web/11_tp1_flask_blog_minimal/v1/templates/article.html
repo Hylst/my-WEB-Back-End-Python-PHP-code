@@ -3,17 +3,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ article.titre }}</title>
+    <title>{{ article.titre }} - Le Codex</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') if url_for else '' }}">
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fefefe;
+        }
+
+        .back {
+            margin-bottom: 20px;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            line-height: 1.8;
+        }
+
+        .badge {
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 
 <body>
-    <a href="/">← Retour au Codex</a>
-    <h1>{{ article.titre }}</h1>
-    <p><em>{{ article.date }}</em></p>
-    <hr>
-    <div class="content">
-        {{ article.contenu }}
-    </div>
+    <a href="{{ url_for('index') }}" class="back">← Retour au Codex</a>
+
+    <article>
+        <h1>{{ article.titre }}</h1>
+        <div class="meta">
+            Par <strong>{{ article.auteur }}</strong> |
+            {{ article.date }} |
+            <span class="badge">{{ article.categorie }}</span> |
+            👁️ {{ article.vues }} vues
+        </div>
+        <hr>
+        <div class="content">
+            {{ article.contenu|safe }}
+        </div>
+    </article>
 </body>
 
 </html>
