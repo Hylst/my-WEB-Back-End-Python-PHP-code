@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Le Codex de Geoffroy</title>
+</head>
+
+<body>
+    <header>
+        <h1>Le Codex Numérique</h1>
+        <nav>
+            <a href="/">Accueil</a> | <a href="/add">Écrire une chronique</a>
+        </nav>
+        <hr>
+    </header>
+
+    <main>
+        {% for article in articles %}
+        <article style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <h2><a href="/article/{{ article.id }}">{{ article.titre }}</a></h2>
+            <small>Publié le {{ article.date }}</small>
+            <p>{{ article.contenu|truncate(100) }}</p>
+        </article>
+        {% else %}
+        <p>Le codex est vide.</p>
+        {% endfor %}
+    </main>
+</body>
+
+</html>
