@@ -1,33 +1,87 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
-    <title>Ma To-Do List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Task Manager</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
-    <h1>Quêtes en cours</h1>
+    <div class="container">
+        <header>
+            <h1>📋 Gestionnaire de Quêtes</h1>
+            <div class="stats">
+                <div class="stat">Total: <span class="stat-value">{{ stats.total }}</span></div>
+                <div class="stat">En cours: <span class="stat-value">{{ stats.pending }}</span></div>
+                <div class="stat">Terminées: <span class="stat-value">{{ stats.completed }}</span></div>
+            </div>
+        </header>
 
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" name="title" placeholder="Nouvelle quête..." required>
-        <button type="submit">Ajouter</button>
-    </form>
+        <!-- Messages Django -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-    <ul>
-        {% for task in tasks %}
-        <li>
-            {% if task.completed %}
-            <strike>{{ task.title }}</strike>
-            {% else %}
-            {{ task.title }}
-            {% endif %}
+        <!-- Formulaire d'ajout -->
+        <form class="add-form" method="POST">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Nouvelle mission..." required>
+            <select name="priority">
+                {% for value, label in priorities %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <input type="date" name="due_date">
+            <button type="submit" class="btn btn-primary">➕ Ajouter</button>
+        </form>
 
-            <a href="{% url 'toggle' task.id %}">[Check]</a>
-            <a href="{% url 'delete' task.id %}" style="color:red;">[X]</a>
-        </li>
-        {% endfor %}
-    </ul>
+        <!-- Filtres -->
+        <div class="filters">
+            <a href="?filter=all" class="filter-btn {% if filter == 'all' %}active{% endif %}">Toutes</a>
+            <a href="?filter=todo" class="filter-btn {% if filter == 'todo' %}active{% endif %}">À faire</a>
+            <a href="?filter=completed" class="filter-btn {% if filter == 'completed' %}active{% endif %}">Terminées</a>
+            <a href="?filter=overdue" class="filter-btn {% if filter == 'overdue' %}active{% endif %}">⚠️ En retard</a>
+        </div>
+
+        <!-- Liste des tâches -->
+        <div class="task-list">
+            {% for task in tasks %}
+            <div
+                class="task priority-{{ task.priority }} {% if task.completed %}completed{% endif %} {% if task.is_overdue %}overdue{% endif %}">
+                <div class="task-content">
+                    <div class="task-title">{{ task.title }}</div>
+                    <div class="task-meta">
+                        {{ task.priority_label }}
+                        {% if task.due_date %}
+                        | 📅 {{ task.due_date|date:"d/m/Y" }}
+                        {% endif %}
+                        {% if task.is_overdue %}
+                        | ⚠️ En retard !
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <a href="{% url 'toggle' task.id %}" class="action-btn toggle">
+                        {% if task.completed %}↩️{% else %}✓{% endif %}
+                    </a>
+                    <a href="{% url 'delete' task.id %}" class="action-btn delete">🗑️</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <h3>🎉 Aucune quête en vue</h3>
+                <p>Ajoutez votre première mission ci-dessus</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 
 </html>
