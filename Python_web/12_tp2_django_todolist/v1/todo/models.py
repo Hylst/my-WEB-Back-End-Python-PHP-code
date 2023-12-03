@@ -1,0 +1,14 @@
+from django.db import models
+
+# 03/12/2023 - Geoffroy
+# TP2 - Version 1 : La To-Do List.
+# Simple. Efficace.
+# On commence avec un modèle Tache basique.
+
+class Task(models.Model):
+    title = models.CharField(max_length=200)
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
