@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ma To-Do List V2</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .task {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 5px solid #ccc;
+        }
+
+        .task.completed {
+            border-left-color: #4caf50;
+            opacity: 0.6;
+        }
+
+        .task.overdue {
+            border-left-color: #f44336;
+        }
+
+        .overdue-text {
+            color: red;
+            font-weight: bold;
+        }
+
+        nav a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        nav a.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tableau de Quêtes</h1>
+
+    <nav>
+        Filtrer :
+        <a href="/?filter=all" class="{% if filter == 'all' %}active{% endif %}">Tout</a>
+        <a href="/?filter=todo" class="{% if filter == 'todo' %}active{% endif %}">À faire</a>
+        <a href="/?filter=completed" class="{% if filter == 'completed' %}active{% endif %}">Terminé</a>
+    </nav>
+    <br>
+
+    <form method="POST" style="background: #fff; padding: 15px; border-radius: 5px;">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Nouvelle mission..." required style="width: 60%;">
+        <input type="date" name="due_date">
+        <button type="submit">Accepter la mission</button>
+    </form>
+
+    <div class="task-list">
+        {% for task in tasks %}
+        <div class="task {% if task.completed %}completed{% elif task.is_overdue %}overdue{% endif %}">
+
+            {% if task.completed %}
+            <strike>{{ task.title }}</strike>
+            {% else %}
+            <strong>{{ task.title }}</strong>
+            {% endif %}
+
+            {% if task.due_date %}
+            <small style="color: #666;">
+                (Pour le : {{ task.due_date|date:"d/m/Y" }})
+                {% if task.is_overdue and not task.completed %}
+                <span class="overdue-text">! RETARD !</span>
+                {% endif %}
+            </small>
+            {% endif %}
+
+            <div style="float: right;">
+                <a href="{% url 'toggle' task.id %}">
+                    {% if task.completed %}↺ Refaire{% else %}✓ Valider{% endif %}
+                </a>
+                <a href="{% url 'delete' task.id %}" style="color:red; margin-left: 10px;">X</a>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        {% empty %}
+        <p>Aucune quête active. Le royaume est en paix.</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
