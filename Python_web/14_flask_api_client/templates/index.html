@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Quest Board</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">🎮 Quest Board</div>
+            <div class="header-actions">
+                <a href="{{ url_for('quest_new') }}" class="btn btn-primary">➕ Nouvelle Quête</a>
+            </div>
+        </header>
+
+        <!-- Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Stats -->
+        {% if stats %}
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value">{{ stats.total_quests or 0 }}</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: var(--warning)">{{ stats.by_status.in_progress or 0 }}</div>
+                <div class="stat-label">En cours</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: var(--success)">{{ stats.by_status.completed or 0 }}</div>
+                <div class="stat-label">Terminées</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color: gold">{{ stats.gold_earned or 0 }} 🪙</div>
+                <div class="stat-label">Or gagné</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Filters -->
+        <div class="filters">
+            <a href="{{ url_for('index') }}" class="filter-link {% if not current_status %}active{% endif %}">Toutes</a>
+            <a href="{{ url_for('index', status='available') }}"
+                class="filter-link {% if current_status == 'available' %}active{% endif %}">📋 Disponibles</a>
+            <a href="{{ url_for('index', status='in_progress') }}"
+                class="filter-link {% if current_status == 'in_progress' %}active{% endif %}">⚔️ En cours</a>
+            <a href="{{ url_for('index', status='completed') }}"
+                class="filter-link {% if current_status == 'completed' %}active{% endif %}">✅ Terminées</a>
+        </div>
+
+        <!-- Quest List -->
+        <div class="quest-grid">
+            {% for quest in quests %}
+            <div class="quest-card {{ quest.difficulty }}">
+                <div class="quest-content">
+                    <a href="{{ url_for('quest_detail', quest_id=quest.id) }}" class="quest-title">
+                        {{ quest.title }}
+                    </a>
+                    <div class="quest-meta">
+                        <span class="badge badge-{{ quest.status }}">
+                            {% if quest.status == 'available' %}📋 Disponible
+                            {% elif quest.status == 'in_progress' %}⚔️ En cours
+                            {% elif quest.status == 'completed' %}✅ Terminée
+                            {% else %}{{ quest.status }}{% endif %}
+                        </span>
+                        <span>💰 {{ quest.reward_gold }} or</span>
+                        <span>⚡ {{ quest.difficulty|capitalize }}</span>
+                        {% if quest.deadline %}
+                        <span>📅 {{ quest.deadline }}</span>
+                        {% endif %}
+                    </div>
+                    {% if quest.description %}
+                    <p class="quest-description">{{ quest.description[:100] }}{% if quest.description|length > 100
+                        %}...{% endif %}</p>
+                    {% endif %}
+                </div>
+                <div class="quest-actions">
+                    {% if quest.status == 'available' %}
+                    <a href="{{ url_for('quest_accept', quest_id=quest.id) }}" class="btn btn-success btn-sm">⚔️
+                        Accepter</a>
+                    {% elif quest.status == 'in_progress' %}
+                    <a href="{{ url_for('quest_complete', quest_id=quest.id) }}" class="btn btn-success btn-sm">🏆
+                        Terminer</a>
+                    {% endif %}
+                    <a href="{{ url_for('quest_edit', quest_id=quest.id) }}" class="btn btn-sm">✏️</a>
+                    <a href="{{ url_for('quest_delete', quest_id=quest.id) }}" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Supprimer cette quête ?')">🗑️</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <h3>🏜️ Aucune quête trouvée</h3>
+                <p>Créez votre première quête pour commencer l'aventure !</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>

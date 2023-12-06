@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Modifier' if quest else 'Nouvelle' }} Quête - Quest Board</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{{ url_for('index') }}" class="logo">🎮 Quest Board</a>
+        </header>
+
+        <div class="form-card">
+            <h2 style="margin-bottom: 1.5rem;">{{ '✏️ Modifier la quête' if quest else '➕ Nouvelle quête' }}</h2>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label class="form-label">Titre *</label>
+                    <input type="text" name="title" class="form-input" value="{{ quest.title if quest else '' }}"
+                        placeholder="Ex: Vaincre le dragon de la montagne" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea"
+                        placeholder="Décrivez la mission en détail...">{{ quest.description if quest else '' }}</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Difficulté</label>
+                        <select name="difficulty" class="form-select">
+                            <option value="easy" {% if quest and quest.difficulty=='easy' %}selected{% endif %}>🟢
+                                Facile</option>
+                            <option value="medium" {% if not quest or quest.difficulty=='medium' %}selected{% endif %}>
+                                🟡 Moyenne</option>
+                            <option value="hard" {% if quest and quest.difficulty=='hard' %}selected{% endif %}>🔴
+                                Difficile</option>
+                            <option value="legendary" {% if quest and quest.difficulty=='legendary' %}selected{% endif
+                                %}>⭐ Légendaire</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Récompense (or)</label>
+                        <input type="number" name="reward_gold" class="form-input"
+                            value="{{ quest.reward_gold if quest else 100 }}" min="0" max="10000">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Date limite</label>
+                        <input type="date" name="deadline" class="form-input"
+                            value="{{ quest.deadline if quest else '' }}">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary">
+                        {{ '💾 Enregistrer' if quest else '➕ Créer la quête' }}
+                    </button>
+                    <a href="{{ url_for('index') }}" class="btn">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
