@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Panier - Bonnes Idées{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">🛒 Mon Panier</h1>
+
+        {% if items %}
+        <form method="POST" action="{{ url_for('cart_update') }}">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix unitaire</th>
+                        <th>Quantité</th>
+                        <th>Sous-total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <div class="cart-item-info">
+                                <span class="cart-item-emoji">{{ item.emoji }}</span>
+                                <div>
+                                    <strong>{{ item.name }}</strong>
+                                    <br><small style="color: #999;">{{ item.category }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ item.price }} neur.</td>
+                        <td>
+                            <input type="number" name="qty_{{ item.id }}" value="{{ item.quantity }}" min="0"
+                                max="{{ item.stock }}" class="quantity-input">
+                        </td>
+                        <td><strong>{{ item.subtotal }} neur.</strong></td>
+                        <td>
+                            <a href="{{ url_for('cart_remove', product_id=item.id) }}" style="color: #e74c3c;">🗑️</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                <button type="submit" class="btn btn-secondary">🔄 Mettre à jour</button>
+                <a href="{{ url_for('cart_clear') }}" class="btn" style="color: #e74c3c;">🗑️ Vider le panier</a>
+            </div>
+        </form>
+
+        <div class="cart-summary">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <a href="{{ url_for('shop') }}" class="btn btn-secondary">← Continuer mes achats</a>
+                </div>
+                <div>
+                    <div class="cart-total">Total : {{ total }} neurones</div>
+                    <a href="{{ url_for('checkout') }}" class="btn btn-success btn-lg" style="margin-top: 1rem;">
+                        Passer commande →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🛒</div>
+            <h3>Votre panier est vide</h3>
+            <p>C'est l'occasion de se faire plaisir !</p>
+            <a href="{{ url_for('shop') }}" class="btn btn-primary" style="margin-top: 1rem;">Découvrir nos produits</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

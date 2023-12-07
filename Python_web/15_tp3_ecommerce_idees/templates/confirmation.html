@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Commande confirmée !{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="confirmation-box">
+            <div class="confirmation-icon">🎉</div>
+            <h1>Merci pour votre commande !</h1>
+            <p style="font-size: 1.1rem; color: #666; margin: 1rem 0;">
+                Vos idées et/ou câlins sont en route vers votre cerveau.
+            </p>
+
+            <div style="margin: 2rem 0;">
+                <p>Numéro de commande :</p>
+                <div class="order-id">{{ order.id }}</div>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 12px; text-align: left; margin: 2rem 0;">
+                <h3 style="margin-bottom: 1rem;">📦 Détails de la commande</h3>
+                {% for item in order.items %}
+                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                    <span>{{ item.name }} × {{ item.quantity }}</span>
+                    <span>{{ item.subtotal }} neur.</span>
+                </div>
+                {% endfor %}
+                <hr style="margin: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;">
+                    <span>Total payé</span>
+                    <span style="color: #ff6b6b;">{{ order.total }} neurones</span>
+                </div>
+            </div>
+
+            <div style="background: #e3f2fd; padding: 1rem; border-radius: 10px; margin-bottom: 2rem;">
+                <strong>📧 Confirmation envoyée à :</strong> {{ order.customer.email }}
+            </div>
+
+            <p style="color: #999;">
+                Livraison mentale effectuée à : <em>{{ order.customer.brain_address }}</em>
+            </p>
+
+            <a href="{{ url_for('shop') }}" class="btn btn-primary btn-lg" style="margin-top: 2rem;">
+                Continuer mes achats
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

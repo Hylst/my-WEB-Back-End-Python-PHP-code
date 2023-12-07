@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Bonnes Idées{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">📝 Finaliser ma commande</h1>
+
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem;">
+            <div class="checkout-form">
+                <h2 style="margin-bottom: 1.5rem;">Vos informations</h2>
+                <form method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Nom complet *</label>
+                        <input type="text" name="name" class="form-input" value="{{ customer.name or '' }}"
+                            placeholder="Jean-Michel Bonne Idée" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" class="form-input" value="{{ customer.email or '' }}"
+                            placeholder="genie@example.com" required>
+                        <div class="form-hint">Pour recevoir la confirmation de commande</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Adresse mentale de livraison *</label>
+                        <input type="text" name="brain_address" class="form-input"
+                            value="{{ customer.brain_address or '' }}"
+                            placeholder="Lobe frontal gauche, 3ème neurone à droite" required>
+                        <div class="form-hint">Où devons-nous envoyer vos idées et câlins ?</div>
+                    </div>
+
+                    <hr style="margin: 2rem 0;">
+
+                    <h3 style="margin-bottom: 1rem;">💳 Paiement</h3>
+                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="payment" value="neurones" checked>
+                            🧠 Paiement en Neurones (recommandé)
+                        </label>
+                    </div>
+                    <div style="background: #f9f9f9; padding: 1rem; border-radius: 10px; opacity: 0.5;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="payment" value="karma" disabled>
+                            ✨ Payer en Karma (bientôt disponible)
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg" style="width: 100%; margin-top: 2rem;">
+                        💫 Confirmer ma commande
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <div
+                    style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                    <h3 style="margin-bottom: 1rem;">📦 Récapitulatif</h3>
+                    {% for product_id, qty in cart.items() %}
+                    <div
+                        style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                        <span>× {{ qty }}</span>
+                        <span>{{ products[product_id].name if product_id in products else 'Produit' }}</span>
+                    </div>
+                    {% endfor %}
+                    <div
+                        style="display: flex; justify-content: space-between; padding-top: 1rem; font-size: 1.25rem; font-weight: 700;">
+                        <span>Total</span>
+                        <span style="color: #ff6b6b;">{{ total }} neur.</span>
+                    </div>
+                </div>
+
+                <div
+                    style="background: #e8f5e9; padding: 1rem; border-radius: 10px; margin-top: 1rem; text-align: center;">
+                    <strong>🚀 Livraison instantanée</strong>
+                    <p style="font-size: 0.9rem; margin: 0;">Vos idées arrivent dès la confirmation !</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

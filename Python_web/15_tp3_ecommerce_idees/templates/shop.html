@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Boutique - Bonnes Idées & Câlins{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">🛍️ Notre Boutique</h1>
+
+        <!-- Filtres -->
+        <div class="filters">
+            <a href="{{ url_for('shop') }}" class="filter-link {% if not current_category %}active{% endif %}">Tout</a>
+            <a href="{{ url_for('shop', category='ideas') }}"
+                class="filter-link {% if current_category == 'ideas' %}active{% endif %}">💡 Idées</a>
+            <a href="{{ url_for('shop', category='hugs') }}"
+                class="filter-link {% if current_category == 'hugs' %}active{% endif %}">🤗 Câlins</a>
+            <a href="{{ url_for('shop', category='combos') }}"
+                class="filter-link {% if current_category == 'combos' %}active{% endif %}">🚀 Combos</a>
+
+            <span style="margin-left: auto;">
+                Trier par :
+                <a href="?sort=price" class="filter-link {% if current_sort == 'price' %}active{% endif %}">Prix</a>
+                <a href="?sort=reviews" class="filter-link {% if current_sort == 'reviews' %}active{% endif %}">Note</a>
+            </span>
+        </div>
+
+        <!-- Produits -->
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                    <div class="product-emoji">{{ product.emoji }}</div>
+                </a>
+                <div class="product-info">
+                    <div class="product-category">{{ product.category }}</div>
+                    <h3 class="product-name">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                    </h3>
+                    <p class="product-description">{{ product.description[:80] }}...</p>
+                    <div class="product-footer">
+                        <div class="product-price">{{ product.price }} <span>neur.</span></div>
+                        <span class="product-rating">⭐ {{ product.reviews }}</span>
+                    </div>
+                    <a href="{{ url_for('cart_add', product_id=product.id) }}" class="btn btn-primary btn-sm"
+                        style="width: 100%; margin-top: 1rem;">+ Ajouter</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <div class="empty-state-icon">🤷</div>
+                <h3>Aucun produit trouvé</h3>
+                <p>Essayez une autre catégorie !</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

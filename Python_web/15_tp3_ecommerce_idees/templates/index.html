@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Bonnes Idées & Câlins{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1>💡 Des idées brillantes.<br>🤗 Des câlins virtuels.</h1>
+        <p>La première boutique en ligne spécialisée dans la vente de bonnes idées et de câlins numériques. Parce que
+            parfois, c'est tout ce dont on a besoin.</p>
+        <a href="{{ url_for('shop') }}" class="btn btn-lg" style="background: white; color: #ff6b6b;">Découvrir la
+            boutique</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">✨ Nos bestsellers</h2>
+        <div class="product-grid">
+            {% for product in featured %}
+            <div class="product-card">
+                <div class="product-emoji">{{ product.emoji }}</div>
+                <div class="product-info">
+                    <div class="product-category">{{ product.category }}</div>
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-description">{{ product.description[:80] }}...</p>
+                    <div class="product-footer">
+                        <div class="product-price">{{ product.price }} <span>neurones</span></div>
+                        <span class="product-rating">⭐ {{ product.reviews }}</span>
+                    </div>
+                    <a href="{{ url_for('cart_add', product_id=product.id) }}" class="btn btn-primary btn-sm"
+                        style="width: 100%; margin-top: 1rem;">Ajouter au panier</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('shop') }}" class="btn btn-secondary">Voir tous les produits →</a>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background: white;">
+    <div class="container">
+        <h2 class="section-title">Comment ça marche ?</h2>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center;">
+            <div>
+                <div style="font-size: 3rem;">1️⃣</div>
+                <h3>Choisissez</h3>
+                <p>Parcourez notre catalogue d'idées géniales et de câlins réconfortants.</p>
+            </div>
+            <div>
+                <div style="font-size: 3rem;">2️⃣</div>
+                <h3>Payez</h3>
+                <p>Réglez en neurones (notre monnaie virtuelle 100% éthique).</p>
+            </div>
+            <div>
+                <div style="font-size: 3rem;">3️⃣</div>
+                <h3>Recevez</h3>
+                <p>Livraison instantanée directement dans votre cerveau !</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

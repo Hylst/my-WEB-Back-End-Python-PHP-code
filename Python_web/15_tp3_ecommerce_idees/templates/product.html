@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Bonnes Idées{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <a href="{{ url_for('shop') }}" style="color: #7f8c8d;">← Retour à la boutique</a>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem;">
+            <div class="product-emoji" style="font-size: 10rem; background: white; border-radius: 20px; padding: 3rem;">
+                {{ product.emoji }}
+            </div>
+
+            <div>
+                <span class="product-category" style="font-size: 0.9rem;">{{ product.category|upper }}</span>
+                <h1 style="font-size: 2rem; margin: 0.5rem 0;">{{ product.name }}</h1>
+                <div style="color: #f39c12; margin-bottom: 1rem;">
+                    ⭐⭐⭐⭐⭐ {{ product.reviews }}/5
+                </div>
+
+                <p style="font-size: 1.1rem; color: #666; line-height: 1.8; margin-bottom: 2rem;">
+                    {{ product.description }}
+                </p>
+
+                <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #ff6b6b;">
+                        {{ product.price }} <span style="font-size: 1rem; color: #999;">neurones</span>
+                    </div>
+                    <div style="color: #7f8c8d; font-size: 0.9rem;">
+                        Stock : {{ product.stock }} unités
+                    </div>
+                </div>
+
+                <a href="{{ url_for('cart_add', product_id=product.id) }}" class="btn btn-primary btn-lg"
+                    style="width: 100%;">
+                    🛒 Ajouter au panier
+                </a>
+            </div>
+        </div>
+
+        {% if suggestions %}
+        <div style="margin-top: 4rem;">
+            <h2 class="section-title">Vous aimerez aussi</h2>
+            <div class="product-grid">
+                {% for p in suggestions %}
+                <div class="product-card">
+                    <div class="product-emoji">{{ p.emoji }}</div>
+                    <div class="product-info">
+                        <h3 class="product-name"><a href="{{ url_for('product_detail', product_id=p.id) }}">{{ p.name
+                                }}</a></h3>
+                        <div class="product-price">{{ p.price }} <span>neur.</span></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
